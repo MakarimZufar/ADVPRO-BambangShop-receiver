@@ -86,4 +86,16 @@ This is the place for you to write reflections:
 
 #### Reflection Subscriber-1
 
+1. Mengapa menggunakan `RwLock<>` untuk menyinkronkan penggunaan `Vec<Notification>` dan mengapa tidak menggunakan `Mutex<>`?
+
+    Dalam kode yang diberikan, kita menggunakan `RwLock<Vec<Notification>>` untuk menyinkronkan akses terhadap data `Vec<Notification>`. `RwLock` dipilih karena ia memungkinkan akses baca secara bersamaan oleh beberapa thread, tetapi hanya satu thread yang dapat menulis data pada satu waktu. Hal ini sangat berguna ketika kita lebih sering melakukan operasi baca (misalnya untuk melihat daftar notifikasi) dibandingkan dengan operasi tulis (menambahkan notifikasi baru). Dengan menggunakan `RwLock`, kita dapat mengoptimalkan kinerja dengan memungkinkan beberapa thread untuk mengakses data secara bersamaan selama tidak ada thread lain yang melakukan operasi tulis.
+
+    Di sisi lain, jika kita menggunakan `Mutex<Vec<Notification>>`, kita hanya bisa memiliki satu thread yang mengakses data pada waktu tertentu, baik untuk membaca maupun menulis. Ini akan menyebabkan pembatasan yang lebih ketat dan potensi kinerja yang lebih rendah, terutama jika banyak thread yang perlu membaca data secara bersamaan. Oleh karena itu, `RwLock` lebih cocok untuk kasus ini karena memberikan fleksibilitas dalam mengelola akses baca dan tulis secara bersamaan.
+
+2. Mengapa Rust tidak mengizinkan kita untuk mengubah konten variabel statis langsung seperti di Java?
+
+    Di Rust, penggunaan variabel statis seperti yang didefinisikan dengan `lazy_static!` memerlukan kontrol ketat untuk memastikan keamanan memori dan mencegah kondisi balapan (race conditions). Rust dirancang dengan fokus pada keamanan memori, dan akses langsung ke variabel statis tanpa pengelolaan yang tepat dapat membuka celah bagi masalah seperti data yang diakses secara bersamaan oleh banyak thread tanpa mekanisme perlindungan yang sesuai.
+
+    Dalam contoh kode di atas, kita menggunakan `lazy_static!` untuk mendefinisikan `NOTIFICATIONS` sebagai variabel statis yang hanya dapat diakses melalui mekanisme yang aman seperti `RwLock` atau `Mutex`. Hal ini memastikan bahwa hanya satu thread yang dapat mengubah konten variabel statis pada satu waktu, atau memungkinkan banyak thread untuk membaca secara bersamaan jika menggunakan `RwLock`. Dengan cara ini, Rust mengutamakan keamanan memori dan menghindari potensi masalah yang mungkin muncul jika variabel statis dapat diubah sembarangan tanpa kontrol akses yang ketat.
+
 #### Reflection Subscriber-2

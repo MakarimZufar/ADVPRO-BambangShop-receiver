@@ -99,3 +99,19 @@ This is the place for you to write reflections:
     Dalam contoh kode di atas, kita menggunakan `lazy_static!` untuk mendefinisikan `NOTIFICATIONS` sebagai variabel statis yang hanya dapat diakses melalui mekanisme yang aman seperti `RwLock` atau `Mutex`. Hal ini memastikan bahwa hanya satu thread yang dapat mengubah konten variabel statis pada satu waktu, atau memungkinkan banyak thread untuk membaca secara bersamaan jika menggunakan `RwLock`. Dengan cara ini, Rust mengutamakan keamanan memori dan menghindari potensi masalah yang mungkin muncul jika variabel statis dapat diubah sembarangan tanpa kontrol akses yang ketat.
 
 #### Reflection Subscriber-2
+
+1. Apakah kamu menjelajahi hal-hal di luar langkah-langkah dalam tutorial, misalnya: `src/lib.rs?` Jika tidak, jelaskan mengapa tidak melakukannya. Jika iya, jelaskan hal-hal yang kamu pelajari dari bagian kode lainnya.
+
+    Saya belum menjelajahi bagian `src/lib.rs` karena tutorial lebih fokus pada pengimplementasian fitur utama seperti subscribe, unsubscribe, dan receive. Fokus utama saya adalah memahami bagaimana sistem notifikasi bekerja dengan menggunakan `NotificationService` dan bagaimana menangani request HTTP menggunakan Rocket. Jika saya menjelajah ke `src/lib.rs`, mungkin saya akan melihat definisi fungsi-fungsi dan struktur lainnya yang tidak langsung terkait dengan fungsionalitas utama tutorial ini. Namun, ini bisa menjadi tempat untuk memahami lebih lanjut tentang modularitas dan cara Rust menangani dependensi.
+
+2. Karena kamu sudah menyelesaikan tutorial ini dan mencoba menguji sistem notifikasi dengan menjalankan beberapa instance dari Receiver, jelaskan bagaimana pola Observer membantu kamu untuk menambah lebih banyak subscriber. Bagaimana dengan menjalankan lebih dari satu instance dari aplikasi Main, apakah itu tetap mudah untuk ditambahkan ke dalam sistem?
+
+    Pola Observer sangat membantu dalam menambah lebih banyak subscriber karena struktur yang dipakai sudah mendukung penambahan subscriber secara fleksibel. Setiap kali sebuah instance dari Receiver menerima notifikasi, itu akan diproses tanpa mempengaruhi subscriber lain, sehingga menambah subscriber baru bisa dilakukan dengan cukup mudah tanpa harus mengubah kode yang sudah ada. Sistem ini dirancang untuk mendukung komunikasi satu-ke-banyak, di mana penerima baru bisa langsung mulai menerima pemberitahuan setelah mereka "subscribe".
+
+    Mengenai menjalankan lebih dari satu instance dari aplikasi Main, hal ini masih sangat memungkinkan karena aplikasi menggunakan pola ini dengan mekanisme yang cukup mudah untuk diperluas. Misalnya, kita bisa memulai beberapa instance dari aplikasi dengan cara yang sama dan menghubungkan mereka ke server yang sama atau berbeda tanpa harus merombak sistem yang sudah ada. Hal ini memudahkan kita untuk memperluas aplikasi ke banyak instance atau lingkungan yang berbeda.
+
+3. Apakah kamu sudah mencoba membuat uji coba (Test) sendiri, atau meningkatkan dokumentasi pada koleksi Postman-mu? Jika sudah, apakah fitur-fitur tersebut berguna untuk pekerjaanmu (baik itu pekerjaan tutorial atau proyek kelompok)?
+
+    Saya sudah mencoba untuk membuat beberapa uji coba pada sistem notifikasi yang saya buat, khususnya untuk menguji apakah notifikasi berhasil dikirimkan setelah subscribe atau unsubscribe. Saya merasa fitur uji coba ini sangat berguna karena memungkinkan saya untuk memverifikasi bahwa alur sistem bekerja dengan baik sesuai yang diharapkan.
+
+    Selain itu, meningkatkan dokumentasi di Postman juga membantu saya untuk memastikan bahwa endpoint-endpoint API yang saya buat mudah diuji oleh anggota tim lainnya. Dengan dokumentasi yang jelas, pengujian API menjadi lebih terstruktur dan memudahkan kolaborasi dalam tim, khususnya dalam proyek kelompok. Fitur ini membantu mempercepat proses debugging dan memastikan bahwa API dapat digunakan dengan benar oleh setiap anggota tim yang bekerja pada bagian berbeda dalam proyek.
